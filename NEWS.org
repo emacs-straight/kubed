@@ -1,0 +1,57 @@
+#+title:                 Kubed NEWS -- history of user-visible changes
+#+author:                Eshel Yaron
+#+email:                 me@eshelyaron.com
+#+language:              en
+#+options:               ':t toc:nil num:nil ^:{}
+
+This file contains the release notes for Kubed, a rich Emacs interface
+for Kubernetes.
+
+For further details, see the Kubed manual:
+[[https://eshelyaron.com/sweep.html][https://eshelyaron.com/kubed.html]].
+
+* Version 0.3.1 on 2024-08-06
+
+** New command for fitting column width to content in resource tables.
+
+** New transient menu showing help in resource table buffers.
+
+* Version 0.3.0 on 2024-08-05
+
+** New command for copying name of resource at point to kill ring.
+
+** New commands for running ~kubectl~ command on resource at point.
+
+** Support bookmarking resource list and resource details buffers.
+
+** New command for jumping from resource details buffer to list buffer.
+
+** Fix installation on Doom Emacs.
+
+** New transient menu for displaying resources.
+
+** Support multiple resource list buffers with different namespaces or contexts.
+
+* Version 0.2.0 on 2024-08-02
+
+** Ensure compatibility with Emacs 29.
+
+** Add right-click context menus in resource tables.
+
+** New menu-bar "Kubernetes" menu.
+
+** New commands for restarting and watching deployments.
+
+** Add filtering capability to all resource tables.
+
+** New cron job commands: suspend, resume, and start job now.
+
+** New commands for patching resources.
+
+** New useful columns in services table and deployments table.
+
+** Use multi-column layout in transient menus.
+
+* Version 0.1.0 on 2024-07-28
+
+Initial release.
