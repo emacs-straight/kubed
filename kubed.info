@@ -1,4 +1,4 @@
-This is doc5fuvIC.info, produced by makeinfo version 6.8 from
+This is docrIopYJ.info, produced by makeinfo version 6.8 from
 kubed.texi.
 
 This manual is for Kubed 0.3.1, a rich Emacs interface for Kubernetes.
@@ -16,7 +16,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: doc5fuvIC.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docrIopYJ.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 Kubed: Kubernetes, Emacs, done!
 *******************************
@@ -33,7 +33,7 @@ This manual is for Kubed 0.3.1, a rich Emacs interface for Kubernetes.
 * Indices::
 
 
-File: doc5fuvIC.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
+File: docrIopYJ.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -56,7 +56,7 @@ along with many options that Kubed provides for you to customize its
 behavior.
 
 
-File: doc5fuvIC.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
+File: docrIopYJ.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
 
 2 Getting Started
 *****************
@@ -83,7 +83,7 @@ installations.  If Emacs doesn’t find the ‘kubectl’ executable via
      Name of ‘kubectl’ executable file to use.
 
 
-File: doc5fuvIC.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
+File: docrIopYJ.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
 
 3 Usage
 *******
@@ -138,7 +138,7 @@ interactive guidance for invoking Kubed commands.  *Note
 * Transient Menus::
 
 
-File: doc5fuvIC.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
+File: docrIopYJ.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
 
 3.1 Display Resource
 ====================
@@ -213,9 +213,22 @@ This minor mode does the following:
      ‘kubed-display-resource-jump-to-list’, which pops up the resources
      list buffer for the type of the displayed resource, and takes you
      to the line corresponding to it.
+   • It binds ‘C-c C-c’ to command ‘kubed-display-resource-replace’,
+     which lets you apply any changes that you make in the YAML buffer
+     back to the resource.  When you hit ‘C-c C-c’, Kubed asks you for
+     confirmation before proceeding; you can reply with ‘d’ (‘diff’) to
+     show a diff between the current state of the resource and the
+     current buffer contents.  You can also display this diff anytime
+     with ‘C-c C-=’.  Note that by default Kubed displays resources in
+     read-only buffers, so you may need to hit ‘C-x C-q’
+     (‘read-only-mode’) before making changes in the buffer.
+   • It lets you repopulate the buffer with updated information about
+     the resource with ‘C-x x g’ (‘revert-buffer-quick’) and
+     ‘M-x revert-buffer’.  This is also useful if you edit the resource
+     and want to restart from a clean slate.
 
 
-File: doc5fuvIC.info,  Node: Browse Resources,  Next: Transient Menus,  Prev: Display Resource,  Up: Usage
+File: docrIopYJ.info,  Node: Browse Resources,  Next: Transient Menus,  Prev: Display Resource,  Up: Usage
 
 3.2 Browse Resources
 ====================
@@ -322,7 +335,7 @@ the usual ‘C-x r m’.  *Note (emacs)Bookmarks::.
 * List Filter::
 
 
-File: doc5fuvIC.info,  Node: List Filter,  Up: Browse Resources
+File: docrIopYJ.info,  Node: List Filter,  Up: Browse Resources
 
 3.2.1 Filtering Resource Lists
 ------------------------------
@@ -335,15 +348,16 @@ conditions are hidden, so you can focus on those that do.
 
    Filters can be simple (“atomic filters”) or complex (“composed
 filters”).  In the simple case, you enter a filter in the minibuffer in
-the format ‘OP COL VAL’, where OP is a comparison operator, either ‘=’
-or ‘~’, COL is a column name, and VAL is a value to compare to values of
-COL with OP.
+the format ‘OP COL VAL’, where OP is a comparison operator, one of ‘=’,
+‘~’, ‘<’ and ‘>’; COL is a column name; and VAL is a value to compare to
+values of COL with OP.
 
    If OP is ‘=’, it says to keep only lines whose COL equals VAL.  If OP
 is ‘~’, it says to keep lines whose COL matches the VAL as a regular
-expression.  For example, the filter ‘= Name foobar’ keeps only
-resources whose name is ‘foobar’.  To include whitespace in VAL, wrap
-VAL in double quotes: ‘= Name "foo bar"’.
+expression.  ‘<’ and ‘>’ compare column values to numeric values.  For
+example, the filter ‘= Name foobar’ keeps only resources whose name is
+‘foobar’.  To include whitespace in VAL, wrap VAL in double quotes: ‘=
+Name "foo bar"’.
 
    The possible values of OP and their meanings are defined in
 ‘kubed-list-filter-operator-alist’, which is a user option you can use
@@ -384,13 +398,13 @@ available for column names and values.  To clear the filter, just exit
 the minibuffer with an empty input.
 
 
-File: doc5fuvIC.info,  Node: Transient Menus,  Prev: Browse Resources,  Up: Usage
+File: docrIopYJ.info,  Node: Transient Menus,  Prev: Browse Resources,  Up: Usage
 
 3.3 Transient Menus
 ===================
 
 
-File: doc5fuvIC.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
+File: docrIopYJ.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
 
 4 Extending Kubed
 *****************
@@ -429,7 +443,7 @@ list buffer and the ‘commands’ argument which lets you associate
 additional commands with your resource type.
 
 
-File: doc5fuvIC.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
+File: docrIopYJ.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
 
 5 Contributing
 **************
@@ -449,7 +463,7 @@ new buffer with a message template ready to be sent to the development
 mailing list.
 
 
-File: doc5fuvIC.info,  Node: Indices,  Prev: Contributing,  Up: Top
+File: docrIopYJ.info,  Node: Indices,  Prev: Contributing,  Up: Top
 
 Indices
 *******
@@ -462,7 +476,7 @@ Indices
 * Concept Index::
 
 
-File: doc5fuvIC.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
+File: docrIopYJ.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
 
 Function index
 ==============
@@ -476,8 +490,10 @@ Function index
 * kubed-display-namespace:               Display Resource.     (line 15)
 * kubed-display-pod:                     Display Resource.     (line 13)
 * kubed-display-resource:                Display Resource.     (line 10)
+* kubed-display-resource-diff:           Display Resource.     (line 76)
 * kubed-display-resource-jump-to-list:   Display Resource.     (line 72)
 * kubed-display-resource-mode:           Display Resource.     (line 61)
+* kubed-display-resource-replace:        Display Resource.     (line 76)
 * kubed-list-copy-as-kill:               Browse Resources.     (line 71)
 * kubed-list-delete:                     Browse Resources.     (line 51)
 * kubed-list-delete-marked:              Browse Resources.     (line 67)
@@ -500,12 +516,15 @@ Function index
 * kubed-transient:                       Usage.                (line 40)
 * next-line:                             Browse Resources.     (line 74)
 * previous-line:                         Browse Resources.     (line 76)
+* read-only-mode:                        Display Resource.     (line 76)
+* revert-buffer:                         Display Resource.     (line 85)
+* revert-buffer-quick:                   Display Resource.     (line 85)
 * tabulated-list-narrow-current-column:  Browse Resources.     (line 93)
 * tabulated-list-sort:                   Browse Resources.     (line 86)
 * tabulated-list-widen-current-column:   Browse Resources.     (line 96)
 
 
-File: doc5fuvIC.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
+File: docrIopYJ.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 Variable index
 ==============
@@ -514,12 +533,12 @@ Variable index
 * Menu:
 
 * kubed-kubectl-program:                 Getting Started.      (line 24)
-* kubed-list-filter-operator-alist:      List Filter.          (line 28)
+* kubed-list-filter-operator-alist:      List Filter.          (line 29)
 * kubed-prefix-map:                      Usage.                (line 16)
 * kubed-yaml-setup-hook:                 Display Resource.     (line 51)
 
 
-File: doc5fuvIC.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
+File: docrIopYJ.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
 
 Keystroke index
 ===============
@@ -532,8 +551,12 @@ Keystroke index
 * {:                                     Browse Resources.     (line 93)
 * |:                                     Browse Resources.     (line 88)
 * }:                                     Browse Resources.     (line 96)
+* C-c C-=:                               Display Resource.     (line 76)
+* C-c C-c:                               Display Resource.     (line 76)
 * C-c C-j:                               Display Resource.     (line 72)
 * C-o:                                   Browse Resources.     (line 48)
+* C-x C-q:                               Display Resource.     (line 76)
+* C-x x g:                               Display Resource.     (line 85)
 * D:                                     Browse Resources.     (line 51)
 * d:                                     Browse Resources.     (line 63)
 * e:                                     Browse Resources.     (line 53)
@@ -551,7 +574,7 @@ Keystroke index
 * x:                                     Browse Resources.     (line 67)
 
 
-File: doc5fuvIC.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
+File: docrIopYJ.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
 
 Concept index
 =============
@@ -577,16 +600,16 @@ Node: Usage2970
 Ref: Definition of kubed-prefix-map3610
 Ref: Definition of kubed-menu-bar-mode4380
 Node: Display Resource4932
-Node: Browse Resources8434
-Node: List Filter12805
-Node: Transient Menus15377
-Node: Extending Kubed15503
-Node: Contributing17094
-Node: Indices17794
-Node: Function Index17968
-Node: Variable Index20514
-Node: Keystroke Index20967
-Node: Concept Index22735
+Node: Browse Resources9339
+Node: List Filter13710
+Node: Transient Menus16363
+Node: Extending Kubed16489
+Node: Contributing18080
+Node: Indices18780
+Node: Function Index18954
+Node: Variable Index21865
+Node: Keystroke Index22318
+Node: Concept Index24378
 
 End Tag Table
 
