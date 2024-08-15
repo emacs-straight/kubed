@@ -15,11 +15,18 @@
 (require 'kubed)
 (require 'transient)
 
-(defclass kubed-transient-infix (transient-infix) ())
+(defun kubed-transient-read-context (prompt _initial-input _history)
+  "Prompt with PROMPT for Kubernetes context."
+  (kubed-read-context prompt (kubed-local-context)))
 
 (defun kubed-transient-read-namespace (prompt _initial-input _history)
   "Prompt with PROMPT for Kubernetes namespace."
-  (kubed-read-namespace prompt (kubed-current-namespace)))
+  (let ((context (seq-some (lambda (s)
+                             (and (cl-typep s 'transient-infix)
+                                  (equal (oref s argument) "--context=")
+                                  (oref s value)))
+                           transient--suffixes)))
+    (kubed-read-namespace prompt (kubed-current-namespace context) nil context)))
 
 (defun kubed-transient-read-ingressclass (prompt _initial-input _history)
   "Prompt with PROMPT for Kubernetes ingress class."
@@ -44,7 +51,8 @@
      ("RET" "Display" kubed-transient-display)
      ("+" "Create"  kubed-transient-create)
      ("*" "Apply"   kubed-transient-apply)
-     ("E" "Explain" kubed-explain)]
+     ("e" "Edit"    kubed-transient-edit)
+     ("D" "Delete"  kubed-transient-delete)]
    ;; Second column.
    [("r" "Run"     kubed-transient-run)
     ("a" "Attach"  kubed-transient-attach)
@@ -54,6 +62,7 @@
    [("d" "Diff"    kubed-transient-diff)
     ("P" "Patch"   kubed-transient-patch)
     ("R" "Rollout" kubed-transient-rollout)
+    ("E" "Explain" kubed-explain)
     ("!" "Command line" kubed-kubectl-command)]])
 
 ;;;###autoload (autoload 'kubed-transient-rollout "kubed-transient" nil t)
@@ -189,18 +198,24 @@
 (transient-define-prefix kubed-transient-create ()
   "Create Kubernetes resource."
   ["Kubernetes Create\n"
-   ["Actions"
-    ("+" "Create" kubed-create)
+   ["Kinds"
+    ("p" "Pod" kubed-create-pod)
+    ("d" "Deployment" kubed-transient-create-deployment)
+    ("j" "Job" kubed-transient-create-job)
+    ("c" "CronJob" kubed-transient-create-cronjob)
+    ("s" "Service" kubed-create-service)]
+   ["More"
+    :pad-keys t
+    ("S" "Secret" kubed-create-secret)
+    ("N" "Namespace" kubed-create-namespace)
+    ("i" "Ingress" kubed-transient-create-ingress)
+    ("+" "Any type" kubed-create)
     ("!" "Command line" kubed-kubectl-command)]
    ["Options"
     ("-f" "Definition file" "--filename="
-     :reader kubed-transient-read-resource-definition-file-name)]
-   ["Kinds"
-    ("d" "Deployment" kubed-transient-create-deployment)
-    ("n" "Namespace" kubed-create-namespace)
-    ("c" "CronJob" kubed-transient-create-cronjob)
-    ("j" "Job" kubed-transient-create-job)
-    ("i" "Ingress" kubed-transient-create-ingress)]]
+     :reader kubed-transient-read-resource-definition-file-name)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
   (interactive)
   (transient-setup 'kubed-transient-create nil nil
                    :scope '("create")))
@@ -220,14 +235,68 @@
     ("S" "Secret" kubed-display-secret)
     ("N" "Namespace" kubed-display-namespace)
     ("i" "Ingress" kubed-display-ingress)
-    ("RET" "Any" kubed-display-resource)
+    ("RET" "Any type" kubed-display-resource)
     ("!" "Command line" kubed-kubectl-command)]
    ["Options"
     ("-n" "Namespace" "--namespace="
-     :prompt "Namespace" :reader kubed-transient-read-namespace)]]
+     :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
   (interactive)
   (transient-setup 'kubed-transient-display nil nil
                    :scope '("get")))
+
+;;;###autoload (autoload 'kubed-transient-edit "kubed-transient" nil t)
+(transient-define-prefix kubed-transient-edit ()
+  "Edit Kubernetes resource."
+  ["Kubernetes Edit\n"
+   ["Kinds"
+    ("p" "Pod" kubed-edit-pod)
+    ("d" "Deployment" kubed-edit-deployment)
+    ("j" "Job" kubed-edit-job)
+    ("c" "CronJob" kubed-edit-cronjob)
+    ("s" "Service" kubed-edit-service)]
+   ["More"
+    :pad-keys t
+    ("S" "Secret" kubed-edit-secret)
+    ("N" "Namespace" kubed-edit-namespace)
+    ("i" "Ingress" kubed-edit-ingress)
+    ("RET" "Any type" kubed-edit-resource)
+    ("!" "Command line" kubed-kubectl-command)]
+   ["Options"
+    ("-n" "Namespace" "--namespace="
+     :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
+  (interactive)
+  (transient-setup 'kubed-transient-edit nil nil
+                   :scope '("edit")))
+
+;;;###autoload (autoload 'kubed-transient-delete "kubed-transient" nil t)
+(transient-define-prefix kubed-transient-delete ()
+  "Delete Kubernetes resource."
+  ["Kubernetes Delete\n"
+   ["Kinds"
+    ("p" "Pod" kubed-delete-pods)
+    ("d" "Deployment" kubed-delete-deployments)
+    ("j" "Job" kubed-delete-jobs)
+    ("c" "CronJob" kubed-delete-cronjobs)
+    ("s" "Service" kubed-delete-services)]
+   ["More"
+    :pad-keys t
+    ("S" "Secret" kubed-delete-secrets)
+    ("N" "Namespace" kubed-delete-namespaces)
+    ("i" "Ingress" kubed-delete-ingresses)
+    ("D" "Any type" kubed-delete-resources)
+    ("!" "Command line" kubed-kubectl-command)]
+   ["Options"
+    ("-n" "Namespace" "--namespace="
+     :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
+  (interactive)
+  (transient-setup 'kubed-transient-delete nil nil
+                   :scope '("delete")))
 
 ;;;###autoload (autoload 'kubed-transient-create-cronjob "kubed-transient" nil t)
 (transient-define-prefix kubed-transient-create-cronjob ()
@@ -239,6 +308,8 @@
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("-I" "Image" "--image="
      :prompt "Image to run: ")
     ("-S" "Schedule" "--schedule="
@@ -259,6 +330,8 @@
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("-c" "Class" "--class="
      :prompt "Class" :reader kubed-transient-read-ingressclass)
     ("-d" "Default backend service" "--default-backend="
@@ -283,6 +356,8 @@
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("-r" "Replicas" "--replicas="
      :prompt "Number of replicas: " :reader transient-read-number-N+)
     ("-I" "Image" "--image="
@@ -307,6 +382,8 @@
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("-I" "Image" "--image="
      :prompt "Image to run: ")
     ("--" "Command" "-- ="
