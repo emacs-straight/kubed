@@ -1,7 +1,7 @@
-This is docOdmIXF.info, produced by makeinfo version 6.8 from
+This is docEuqvYA.info, produced by makeinfo version 6.8 from
 kubed.texi.
 
-This manual is for Kubed 0.3.1, a rich Emacs interface for Kubernetes.
+This manual is for Kubed 0.3.2, a rich Emacs interface for Kubernetes.
 
    Copyright © 2024 Eshel Yaron.
 
@@ -16,12 +16,12 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docOdmIXF.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docEuqvYA.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 Kubed: Kubernetes, Emacs, done!
 *******************************
 
-This manual is for Kubed 0.3.1, a rich Emacs interface for Kubernetes.
+This manual is for Kubed 0.3.2, a rich Emacs interface for Kubernetes.
 
 * Menu:
 
@@ -33,7 +33,7 @@ This manual is for Kubed 0.3.1, a rich Emacs interface for Kubernetes.
 * Indices::
 
 
-File: docOdmIXF.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
+File: docEuqvYA.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -56,7 +56,7 @@ along with many options that Kubed provides for you to customize its
 behavior.
 
 
-File: docOdmIXF.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
+File: docEuqvYA.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
 
 2 Getting Started
 *****************
@@ -83,7 +83,7 @@ installations.  If Emacs doesn’t find the ‘kubectl’ executable via
      Name of ‘kubectl’ executable file to use.
 
 
-File: docOdmIXF.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
+File: docEuqvYA.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
 
 3 Usage
 *******
@@ -135,10 +135,11 @@ interactive guidance for invoking Kubed commands.  *Note
 
 * Display Resource::
 * Browse Resources::
+* Context and Namespace::
 * Transient Menus::
 
 
-File: docOdmIXF.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
+File: docEuqvYA.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
 
 3.1 Display Resource
 ====================
@@ -162,7 +163,9 @@ displays that resource in a dedicated buffer.  By default, this command
 assumes you want to display a resource that is in the current namespace,
 but if you invoke ‘kubed-display-resource’ with a prefix argument
 (‘C-u’) and choose a namespaced resource type, then it also lets you
-select the namespace of the resource.
+select the namespace of the resource.  With a double prefix argument, it
+lets you select which ‘kubectl’ context to use too.  *Note Context and
+Namespace::.
 
    If you have ‘kubed-prefix-map’ bound to ‘C-c k’, you can invoke
 ‘kubed-display-resource’ with ‘C-c k <RET>’.  This command is also
@@ -228,7 +231,7 @@ This minor mode does the following:
      and want to restart from a clean slate.
 
 
-File: docOdmIXF.info,  Node: Browse Resources,  Next: Transient Menus,  Prev: Display Resource,  Up: Usage
+File: docEuqvYA.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
 
 3.2 Browse Resources
 ====================
@@ -335,7 +338,7 @@ the usual ‘C-x r m’.  *Note (emacs)Bookmarks::.
 * List Filter::
 
 
-File: docOdmIXF.info,  Node: List Filter,  Up: Browse Resources
+File: docEuqvYA.info,  Node: List Filter,  Up: Browse Resources
 
 3.2.1 Filtering Resource Lists
 ------------------------------
@@ -398,13 +401,63 @@ available for column names and values.  To clear the filter, just exit
 the minibuffer with an empty input.
 
 
-File: docOdmIXF.info,  Node: Transient Menus,  Prev: Browse Resources,  Up: Usage
+File: docEuqvYA.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
 
-3.3 Transient Menus
+3.3 Context and Namespace
+=========================
+
+Kubed uses ‘kubectl’ to interact with Kubernetes clusters, and you can
+use multiple ‘kubectl’ “contexts” in Kubed to work with different
+Kubernetes clusters in parallel.  Within each context, Kubed lets you
+work in multiple “namespaces” too.  In general, each buffer has its own
+“local context” and “local namespace”, and Kubed commands use these
+local context and namespace by default.  This is similar to how
+different buffers have different values of ‘default-directory’ (*note
+(emacs)File Names::), and how that affects commands that interact with
+the filesystem.
+
+   For Kubed buffers that display a Kubernetes resource (*note Display
+Resource::) or a list of resources (*note Browse Resources::), the
+buffer-local context and namespace are the context and namespace of the
+resources the buffer displays.  For non-Kubed buffers, the user option
+‘kubed-default-context-and-namespace’ determines the default local
+context and namespace.
+
+ -- User Option: kubed-default-context-and-namespace
+     Default ‘kubectl’ context and Kubernetes namespace for Kubed
+     commands.  The value of this option is either a cons cell
+     ‘(CONTEXT . NAMESPACE)’ or ‘nil’.  If it is ‘nil’, Kubed
+     initializes this option to a cons cell with the current ‘kubectl’
+     context and namespace for that context on the first time Kubed
+     consults this option.
+
+   As mentioned above, most Kubed commands use the local context and
+namespace by default—it is also conventional for Kubed commands to let
+you choose a different namespace if you invoke them with a prefix
+argument (‘C-u’), and to also let you choose a different context if you
+invoke them with a double prefix argument (‘C-u C-u’).
+
+   The following functions return the local context and namespace for
+buffer in which you call them:
+
+ -- Function: kubed-local-context
+     Return the local ‘kubectl’ context for the current buffer.
+
+ -- Function: kubed-local-namespace
+     Return the local Kubernetes namespace for the current buffer.
+
+ -- Function: kubed-local-context-and-namespace
+     Return the local context and namespace for the current buffer as a
+     cons cell ‘(CONTEXT . NAMESPACE)’.
+
+
+File: docEuqvYA.info,  Node: Transient Menus,  Prev: Context and Namespace,  Up: Usage
+
+3.4 Transient Menus
 ===================
 
 
-File: docOdmIXF.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
+File: docEuqvYA.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
 
 4 Extending Kubed
 *****************
@@ -443,7 +496,7 @@ list buffer and the ‘commands’ argument which lets you associate
 additional commands with your resource type.
 
 
-File: docOdmIXF.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
+File: docEuqvYA.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
 
 5 Contributing
 **************
@@ -463,7 +516,7 @@ new buffer with a message template ready to be sent to the development
 mailing list.
 
 
-File: docOdmIXF.info,  Node: Indices,  Prev: Contributing,  Up: Top
+File: docEuqvYA.info,  Node: Indices,  Prev: Contributing,  Up: Top
 
 Indices
 *******
@@ -476,7 +529,7 @@ Indices
 * Concept Index::
 
 
-File: docOdmIXF.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
+File: docEuqvYA.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
 
 Function index
 ==============
@@ -490,10 +543,10 @@ Function index
 * kubed-display-namespace:               Display Resource.     (line 15)
 * kubed-display-pod:                     Display Resource.     (line 13)
 * kubed-display-resource:                Display Resource.     (line 10)
-* kubed-display-resource-diff:           Display Resource.     (line 76)
-* kubed-display-resource-jump-to-list:   Display Resource.     (line 72)
-* kubed-display-resource-mode:           Display Resource.     (line 61)
-* kubed-display-resource-replace:        Display Resource.     (line 76)
+* kubed-display-resource-diff:           Display Resource.     (line 78)
+* kubed-display-resource-jump-to-list:   Display Resource.     (line 74)
+* kubed-display-resource-mode:           Display Resource.     (line 63)
+* kubed-display-resource-replace:        Display Resource.     (line 78)
 * kubed-list-copy-as-kill:               Browse Resources.     (line 71)
 * kubed-list-delete:                     Browse Resources.     (line 51)
 * kubed-list-delete-marked:              Browse Resources.     (line 67)
@@ -511,20 +564,26 @@ Function index
 * kubed-list-transient:                  Browse Resources.     (line 41)
 * kubed-list-unmark:                     Browse Resources.     (line 69)
 * kubed-list-update:                     Browse Resources.     (line 57)
+* kubed-local-context:                   Context and Namespace.
+                                                               (line 40)
+* kubed-local-context-and-namespace:     Context and Namespace.
+                                                               (line 46)
+* kubed-local-namespace:                 Context and Namespace.
+                                                               (line 43)
 * kubed-menu-bar-mode:                   Usage.                (line 34)
 * kubed-submit-bug-report:               Contributing.         (line 12)
 * kubed-transient:                       Usage.                (line 40)
 * next-line:                             Browse Resources.     (line 74)
 * previous-line:                         Browse Resources.     (line 76)
-* read-only-mode:                        Display Resource.     (line 76)
-* revert-buffer:                         Display Resource.     (line 85)
-* revert-buffer-quick:                   Display Resource.     (line 85)
+* read-only-mode:                        Display Resource.     (line 78)
+* revert-buffer:                         Display Resource.     (line 87)
+* revert-buffer-quick:                   Display Resource.     (line 87)
 * tabulated-list-narrow-current-column:  Browse Resources.     (line 93)
 * tabulated-list-sort:                   Browse Resources.     (line 86)
 * tabulated-list-widen-current-column:   Browse Resources.     (line 96)
 
 
-File: docOdmIXF.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
+File: docEuqvYA.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 Variable index
 ==============
@@ -532,13 +591,15 @@ Variable index
  [index ]
 * Menu:
 
+* kubed-default-context-and-namespace:   Context and Namespace.
+                                                               (line 23)
 * kubed-kubectl-program:                 Getting Started.      (line 24)
 * kubed-list-filter-operator-alist:      List Filter.          (line 29)
 * kubed-prefix-map:                      Usage.                (line 16)
-* kubed-yaml-setup-hook:                 Display Resource.     (line 51)
+* kubed-yaml-setup-hook:                 Display Resource.     (line 53)
 
 
-File: docOdmIXF.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
+File: docEuqvYA.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
 
 Keystroke index
 ===============
@@ -551,12 +612,12 @@ Keystroke index
 * {:                                     Browse Resources.     (line 93)
 * |:                                     Browse Resources.     (line 88)
 * }:                                     Browse Resources.     (line 96)
-* C-c C-=:                               Display Resource.     (line 76)
-* C-c C-c:                               Display Resource.     (line 76)
-* C-c C-j:                               Display Resource.     (line 72)
+* C-c C-=:                               Display Resource.     (line 78)
+* C-c C-c:                               Display Resource.     (line 78)
+* C-c C-j:                               Display Resource.     (line 74)
 * C-o:                                   Browse Resources.     (line 48)
-* C-x C-q:                               Display Resource.     (line 76)
-* C-x x g:                               Display Resource.     (line 85)
+* C-x C-q:                               Display Resource.     (line 78)
+* C-x x g:                               Display Resource.     (line 87)
 * D:                                     Browse Resources.     (line 51)
 * d:                                     Browse Resources.     (line 63)
 * e:                                     Browse Resources.     (line 53)
@@ -574,7 +635,7 @@ Keystroke index
 * x:                                     Browse Resources.     (line 67)
 
 
-File: docOdmIXF.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
+File: docEuqvYA.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
 
 Concept index
 =============
@@ -599,17 +660,18 @@ Node: Getting Started1873
 Node: Usage2970
 Ref: Definition of kubed-prefix-map3610
 Ref: Definition of kubed-menu-bar-mode4380
-Node: Display Resource4932
-Node: Browse Resources9339
-Node: List Filter13710
-Node: Transient Menus16363
-Node: Extending Kubed16489
-Node: Contributing18080
-Node: Indices18780
-Node: Function Index18954
-Node: Variable Index21865
-Node: Keystroke Index22318
-Node: Concept Index24378
+Node: Display Resource4958
+Node: Browse Resources9488
+Node: List Filter13865
+Node: Context and Namespace16518
+Node: Transient Menus18908
+Node: Extending Kubed19039
+Node: Contributing20630
+Node: Indices21330
+Node: Function Index21504
+Node: Variable Index24826
+Node: Keystroke Index25416
+Node: Concept Index27476
 
 End Tag Table
 

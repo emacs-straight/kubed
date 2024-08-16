@@ -21,12 +21,13 @@
 
 (defun kubed-transient-read-namespace (prompt _initial-input _history)
   "Prompt with PROMPT for Kubernetes namespace."
-  (let ((context (seq-some (lambda (s)
-                             (and (cl-typep s 'transient-infix)
-                                  (equal (oref s argument) "--context=")
-                                  (oref s value)))
-                           transient--suffixes)))
-    (kubed-read-namespace prompt (kubed-current-namespace context) nil context)))
+  (let ((context (or (seq-some (lambda (s)
+                                 (and (cl-typep s 'transient-infix)
+                                      (equal (oref s argument) "--context=")
+                                      (oref s value)))
+                               transient--suffixes)
+                     (kubed-local-context))))
+    (kubed-read-namespace prompt (kubed--namespace context) nil context)))
 
 (defun kubed-transient-read-ingressclass (prompt _initial-input _history)
   "Prompt with PROMPT for Kubernetes ingress class."
@@ -75,7 +76,9 @@
     ("!" "Command line" kubed-kubectl-command)]
    ["Options"
     ("-n" "Namespace" "--namespace="
-     :prompt "Namespace" :reader kubed-transient-read-namespace)]]
+     :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
   (interactive)
   (transient-setup 'kubed-transient-rollout nil nil
                    :scope '("rollout")))
@@ -92,7 +95,9 @@
     ("-t" "Allocate TTY" "--tty")]
    ["Options"
     ("-n" "Namespace" "--namespace="
-     :prompt "Namespace" :reader kubed-transient-read-namespace)]]
+     :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
   (interactive)
   (transient-setup 'kubed-transient-attach nil nil
                    :value '("--stdin" "--tty")
@@ -109,7 +114,9 @@
     ("-M" "Include managed fields" "--show-managed-fields")]
    ["Options"
     ("-f" "Definition file" "--filename="
-     :reader kubed-transient-read-resource-definition-file-name)]]
+     :reader kubed-transient-read-resource-definition-file-name)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
   (interactive)
   (transient-setup 'kubed-transient-diff nil nil
                    :scope '("diff")))
@@ -127,6 +134,8 @@
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("--" "Command" "-- ="
      :prompt "Command: ")]]
   (interactive)
@@ -146,10 +155,12 @@
     ("-i" "Open stdin" "--stdin")
     ("-t" "Allocate TTY" "--tty")
     ("-R" "Remove after exit" "--rm")
-    ("-C" "Override container command" "--command")]
+    ("-c" "Override container command" "--command")]
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("-I" "Image" "--image="
      :prompt "Image to deploy: ")
     ("-p" "Port" "--port="
@@ -172,7 +183,9 @@
     ("!" "Command line" kubed-kubectl-command)]
    ["Options"
     ("-f" "Definition file" "--filename="
-     :reader kubed-transient-read-resource-definition-file-name)]]
+     :reader kubed-transient-read-resource-definition-file-name)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)]]
   (interactive)
   (transient-setup 'kubed-transient-apply nil nil
                    :scope '("apply")))
@@ -187,6 +200,8 @@
    ["Options"
     ("-n" "Namespace" "--namespace="
      :prompt "Namespace" :reader kubed-transient-read-namespace)
+    ("-C" "Context" "--context="
+     :prompt "Context" :reader kubed-transient-read-context)
     ("-t" "Patch type" "--type="
      :prompt "Patch type: "
      :choices ("strategic" "merge" "json"))]]
