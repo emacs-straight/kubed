@@ -1,4 +1,4 @@
-This is docEuqvYA.info, produced by makeinfo version 6.8 from
+This is docnR2dvo.info, produced by makeinfo version 6.8 from
 kubed.texi.
 
 This manual is for Kubed 0.3.2, a rich Emacs interface for Kubernetes.
@@ -16,7 +16,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docEuqvYA.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docnR2dvo.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 Kubed: Kubernetes, Emacs, done!
 *******************************
@@ -33,7 +33,7 @@ This manual is for Kubed 0.3.2, a rich Emacs interface for Kubernetes.
 * Indices::
 
 
-File: docEuqvYA.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
+File: docnR2dvo.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -56,7 +56,7 @@ along with many options that Kubed provides for you to customize its
 behavior.
 
 
-File: docEuqvYA.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
+File: docnR2dvo.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
 
 2 Getting Started
 *****************
@@ -83,7 +83,7 @@ installations.  If Emacs doesn’t find the ‘kubectl’ executable via
      Name of ‘kubectl’ executable file to use.
 
 
-File: docEuqvYA.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
+File: docnR2dvo.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
 
 3 Usage
 *******
@@ -139,7 +139,7 @@ interactive guidance for invoking Kubed commands.  *Note
 * Transient Menus::
 
 
-File: docEuqvYA.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
+File: docnR2dvo.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
 
 3.1 Display Resource
 ====================
@@ -231,7 +231,7 @@ This minor mode does the following:
      and want to restart from a clean slate.
 
 
-File: docEuqvYA.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
+File: docnR2dvo.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
 
 3.2 Browse Resources
 ====================
@@ -288,7 +288,7 @@ derived modes:
      Edit the resource at point (‘kubed-list-edit’).
 ‘P’
      Patch the resource at point (‘kubed-list-patch’).
-‘G’
+‘g’
      Update the resources list by fetching new information from
      Kubernetes (‘kubed-list-update’).
 ‘/’
@@ -333,12 +333,19 @@ derived modes:
    In addition, you can bookmark any Kubed resources list buffer with
 the usual ‘C-x r m’.  *Note (emacs)Bookmarks::.
 
+   Note that ‘kubed-list-mode’ (and its type-specific derivatives) bind
+the ‘g’ key, which is commonly bound to ‘revert-buffer’, to
+‘kubed-list-update’.  The difference between these commands is that
+‘revert-buffer’ only refreshes the list display, without fetching
+updated data from Kubernetes.  You can still invoke ‘revert-buffer’ with
+‘C-x x g’ or ‘M-x’, if you need it.
+
 * Menu:
 
 * List Filter::
 
 
-File: docEuqvYA.info,  Node: List Filter,  Up: Browse Resources
+File: docnR2dvo.info,  Node: List Filter,  Up: Browse Resources
 
 3.2.1 Filtering Resource Lists
 ------------------------------
@@ -401,7 +408,7 @@ available for column names and values.  To clear the filter, just exit
 the minibuffer with an empty input.
 
 
-File: docEuqvYA.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
+File: docnR2dvo.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
 
 3.3 Context and Namespace
 =========================
@@ -451,13 +458,13 @@ buffer in which you call them:
      cons cell ‘(CONTEXT . NAMESPACE)’.
 
 
-File: docEuqvYA.info,  Node: Transient Menus,  Prev: Context and Namespace,  Up: Usage
+File: docnR2dvo.info,  Node: Transient Menus,  Prev: Context and Namespace,  Up: Usage
 
 3.4 Transient Menus
 ===================
 
 
-File: docEuqvYA.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
+File: docnR2dvo.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
 
 4 Extending Kubed
 *****************
@@ -496,7 +503,7 @@ list buffer and the ‘commands’ argument which lets you associate
 additional commands with your resource type.
 
 
-File: docEuqvYA.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
+File: docnR2dvo.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
 
 5 Contributing
 **************
@@ -516,7 +523,7 @@ new buffer with a message template ready to be sent to the development
 mailing list.
 
 
-File: docEuqvYA.info,  Node: Indices,  Prev: Contributing,  Up: Top
+File: docnR2dvo.info,  Node: Indices,  Prev: Contributing,  Up: Top
 
 Indices
 *******
@@ -529,7 +536,7 @@ Indices
 * Concept Index::
 
 
-File: docEuqvYA.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
+File: docnR2dvo.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
 
 Function index
 ==============
@@ -551,7 +558,7 @@ Function index
 * kubed-list-delete:                     Browse Resources.     (line 51)
 * kubed-list-delete-marked:              Browse Resources.     (line 67)
 * kubed-list-display-resource:           Browse Resources.     (line 48)
-* kubed-list-e:                          Browse Resources.     (line 53)
+* kubed-list-edit:                       Browse Resources.     (line 53)
 * kubed-list-fit-column-width-to-content: Browse Resources.    (line 88)
 * kubed-list-mark-for-deletion:          Browse Resources.     (line 63)
 * kubed-list-mode:                       Browse Resources.     (line 35)
@@ -583,7 +590,7 @@ Function index
 * tabulated-list-widen-current-column:   Browse Resources.     (line 96)
 
 
-File: docEuqvYA.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
+File: docnR2dvo.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 Variable index
 ==============
@@ -599,7 +606,7 @@ Variable index
 * kubed-yaml-setup-hook:                 Display Resource.     (line 53)
 
 
-File: docEuqvYA.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
+File: docnR2dvo.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
 
 Keystroke index
 ===============
@@ -621,7 +628,7 @@ Keystroke index
 * D:                                     Browse Resources.     (line 51)
 * d:                                     Browse Resources.     (line 63)
 * e:                                     Browse Resources.     (line 53)
-* G:                                     Browse Resources.     (line 57)
+* g:                                     Browse Resources.     (line 57)
 * n:                                     Browse Resources.     (line 74)
 * o:                                     Browse Resources.     (line 45)
 * P:                                     Browse Resources.     (line 55)
@@ -635,7 +642,7 @@ Keystroke index
 * x:                                     Browse Resources.     (line 67)
 
 
-File: docEuqvYA.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
+File: docnR2dvo.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
 
 Concept index
 =============
@@ -662,16 +669,16 @@ Ref: Definition of kubed-prefix-map3610
 Ref: Definition of kubed-menu-bar-mode4380
 Node: Display Resource4958
 Node: Browse Resources9488
-Node: List Filter13865
-Node: Context and Namespace16518
-Node: Transient Menus18908
-Node: Extending Kubed19039
-Node: Contributing20630
-Node: Indices21330
-Node: Function Index21504
-Node: Variable Index24826
-Node: Keystroke Index25416
-Node: Concept Index27476
+Node: List Filter14273
+Node: Context and Namespace16926
+Node: Transient Menus19316
+Node: Extending Kubed19447
+Node: Contributing21038
+Node: Indices21738
+Node: Function Index21912
+Node: Variable Index25234
+Node: Keystroke Index25824
+Node: Concept Index27884
 
 End Tag Table
 

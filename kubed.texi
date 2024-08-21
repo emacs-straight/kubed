@@ -358,16 +358,16 @@ Display the resource at point in another window without selecting it
 @item D
 Delete the resource at point (@code{kubed-list-delete}).
 @kindex e
-@findex kubed-list-e
+@findex kubed-list-edit
 @item e
 Edit the resource at point (@code{kubed-list-edit}).
 @kindex P
 @findex kubed-list-patch
 @item P
 Patch the resource at point (@code{kubed-list-patch}).
-@kindex G
+@kindex g
 @findex kubed-list-update
-@item G
+@item g
 Update the resources list by fetching new information from Kubernetes
 (@code{kubed-list-update}).
 @kindex /
@@ -439,6 +439,13 @@ Widen the column at point
 
 In addition, you can bookmark any Kubed resources list buffer with the
 usual @kbd{C-x r m}.  @xref{Bookmarks,,,emacs}.
+
+Note that @code{kubed-list-mode} (and its type-specific derivatives)
+bind the @kbd{g} key, which is commonly bound to @code{revert-buffer},
+to @code{kubed-list-update}.  The difference between these commands is
+that @code{revert-buffer} only refreshes the list display, without
+fetching updated data from Kubernetes.  You can still invoke
+@code{revert-buffer} with @kbd{C-x x g} or @kbd{M-x}, if you need it.
 
 @menu
 * List Filter::
