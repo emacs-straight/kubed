@@ -1,4 +1,4 @@
-This is docnR2dvo.info, produced by makeinfo version 6.8 from
+This is docrirKIg.info, produced by makeinfo version 6.8 from
 kubed.texi.
 
 This manual is for Kubed 0.3.2, a rich Emacs interface for Kubernetes.
@@ -16,7 +16,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docnR2dvo.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docrirKIg.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 Kubed: Kubernetes, Emacs, done!
 *******************************
@@ -33,7 +33,7 @@ This manual is for Kubed 0.3.2, a rich Emacs interface for Kubernetes.
 * Indices::
 
 
-File: docnR2dvo.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
+File: docrirKIg.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -56,7 +56,7 @@ along with many options that Kubed provides for you to customize its
 behavior.
 
 
-File: docnR2dvo.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
+File: docrirKIg.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
 
 2 Getting Started
 *****************
@@ -83,7 +83,7 @@ installations.  If Emacs doesn’t find the ‘kubectl’ executable via
      Name of ‘kubectl’ executable file to use.
 
 
-File: docnR2dvo.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
+File: docrirKIg.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
 
 3 Usage
 *******
@@ -139,7 +139,7 @@ interactive guidance for invoking Kubed commands.  *Note
 * Transient Menus::
 
 
-File: docnR2dvo.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
+File: docrirKIg.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
 
 3.1 Display Resource
 ====================
@@ -231,7 +231,7 @@ This minor mode does the following:
      and want to restart from a clean slate.
 
 
-File: docnR2dvo.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
+File: docrirKIg.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
 
 3.2 Browse Resources
 ====================
@@ -345,7 +345,7 @@ updated data from Kubernetes.  You can still invoke ‘revert-buffer’ with
 * List Filter::
 
 
-File: docnR2dvo.info,  Node: List Filter,  Up: Browse Resources
+File: docrirKIg.info,  Node: List Filter,  Up: Browse Resources
 
 3.2.1 Filtering Resource Lists
 ------------------------------
@@ -408,7 +408,7 @@ available for column names and values.  To clear the filter, just exit
 the minibuffer with an empty input.
 
 
-File: docnR2dvo.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
+File: docrirKIg.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
 
 3.3 Context and Namespace
 =========================
@@ -458,13 +458,13 @@ buffer in which you call them:
      cons cell ‘(CONTEXT . NAMESPACE)’.
 
 
-File: docnR2dvo.info,  Node: Transient Menus,  Prev: Context and Namespace,  Up: Usage
+File: docrirKIg.info,  Node: Transient Menus,  Prev: Context and Namespace,  Up: Usage
 
 3.4 Transient Menus
 ===================
 
 
-File: docnR2dvo.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
+File: docrirKIg.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
 
 4 Extending Kubed
 *****************
@@ -503,7 +503,7 @@ list buffer and the ‘commands’ argument which lets you associate
 additional commands with your resource type.
 
 
-File: docnR2dvo.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
+File: docrirKIg.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
 
 5 Contributing
 **************
@@ -523,7 +523,7 @@ new buffer with a message template ready to be sent to the development
 mailing list.
 
 
-File: docnR2dvo.info,  Node: Indices,  Prev: Contributing,  Up: Top
+File: docrirKIg.info,  Node: Indices,  Prev: Contributing,  Up: Top
 
 Indices
 *******
@@ -536,7 +536,7 @@ Indices
 * Concept Index::
 
 
-File: docnR2dvo.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
+File: docrirKIg.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
 
 Function index
 ==============
@@ -590,7 +590,7 @@ Function index
 * tabulated-list-widen-current-column:   Browse Resources.     (line 96)
 
 
-File: docnR2dvo.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
+File: docrirKIg.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 Variable index
 ==============
@@ -606,7 +606,7 @@ Variable index
 * kubed-yaml-setup-hook:                 Display Resource.     (line 53)
 
 
-File: docnR2dvo.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
+File: docrirKIg.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
 
 Keystroke index
 ===============
@@ -642,7 +642,7 @@ Keystroke index
 * x:                                     Browse Resources.     (line 67)
 
 
-File: docnR2dvo.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
+File: docrirKIg.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
 
 Concept index
 =============

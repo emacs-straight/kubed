@@ -499,6 +499,9 @@ If FILTER is omitted or nil, it defaults to `kubed-list-filter'."
 (defvar-local kubed-list-context nil)
 (defvar-local kubed-list-namespace nil)
 
+(defvar-local kubed-list-transient-extra-suffixes nil
+  "List of transient suffixes for the type of resources in current buffer.")
+
 (defun kubed-list-go-to-line (id)
   "Go to beginning of table line with ID."
   (let ((pos nil))
@@ -929,7 +932,13 @@ number at point, or the numeric prefix argument if you provide one."
   (tabulated-list-print t)
   (tabulated-list-init-header))
 
-(declare-function kubed-list-transient "kubed-transient" ())
+(declare-function kubed-list-transient                 "kubed-transient" ())
+(declare-function kubed-transient-logs-for-pod         "kubed-transient" (val))
+(declare-function kubed-transient-logs-for-deployment  "kubed-transient" (val))
+(declare-function kubed-transient-logs-for-statefulset "kubed-transient" (val))
+(declare-function kubed-transient-logs-for-replicaset  "kubed-transient" (val))
+(declare-function kubed-transient-logs-for-job         "kubed-transient" (val))
+(declare-function kubed-transient-logs-for-service     "kubed-transient" (val))
 
 (defvar-keymap kubed-list-mode-map
   :doc "Common keymap for Kubernetes resource list buffers."
@@ -1206,7 +1215,7 @@ Other keyword arguments that go between PROPERTIES and COMMANDS are:
 - `:create (ARGLIST DOCSTRING INTERACTIVE BODY...)': specialize the
   resource creation command, `kubed-create-RESOURCE'.  ARGLIST,
   DOCSTRING, INTERACTIVE and BODY have the same meaning as in `defun'.
-- `:prefix ((KEY LABEL DEFINITION) ...)': additional keybinding for the
+- `:prefix ((KEY LABEL DEFINITION)...)': additional keybinding for the
   prefix keymap `kubed-RESOURCE-prefix-map' and the
   `kubed-RESOURCE-menu-map' menu.  Each element (KEY LABEL DEFINITION)
   says to bind KEY to DEFINITION in `kubed-RESOURCE-menu-map', and to
@@ -1214,7 +1223,9 @@ Other keyword arguments that go between PROPERTIES and COMMANDS are:
 - `:plural PLURAL': specify plural form of RESOURCE, as a symbol.  If
   you omit this keyword argument, the plural form defaults to RESOURCE
   followed by \"s\".
-- `:logs t': generate `kubed-logs-for-RESOURCE' command."
+- `:logs t': generate `kubed-logs-for-RESOURCE' command.
+- `:suffixes (SUFFIX...)': add type-specific transient suffixes to
+  `kubed-list-transient'."
   (declare (indent 2))
   (let ((plrl-var (intern (format "%Ss"                         resource)))
         (read-fun (intern (format "kubed-read-%S"               resource)))
@@ -1224,10 +1235,11 @@ Other keyword arguments that go between PROPERTIES and COMMANDS are:
         (map-name (intern (format "kubed-%S-prefix-map"         resource)))
         (menu-map (intern (format "kubed-%S-menu-map"           resource)))
         (logs-cmd (intern (format "kubed-logs-for-%S"           resource)))
+        (logs-trs (intern (format "kubed-transient-logs-for-%S" resource)))
         (namespaced t) (logs nil)
         (keyword nil)
         frmt-var buff-fun list-cmd expl-cmd dlt-name mod-name
-        ctxt-fun crt-spec prf-keys hist-var)
+        ctxt-fun crt-spec prf-keys hist-var trs-cols)
 
     ;; Process keyword arguments.
     (while (keywordp (car commands))
@@ -1238,6 +1250,7 @@ Other keyword arguments that go between PROPERTIES and COMMANDS are:
        ((eq keyword :create)     (setq crt-spec   (pop commands)))
        ((eq keyword :prefix)     (setq prf-keys   (pop commands)))
        ((eq keyword :plural)     (setq plrl-var   (pop commands)))
+       ((eq keyword :suffixes)   (setq trs-cols   (pop commands)))
        ;; FIXME: Add error for unknown keywords.
        (t (pop commands))))
 
@@ -1455,7 +1468,7 @@ a prefix argument \\[universal-argument], prompt for CONTEXT too."
                 (let ( ,resource context namespace
                        container follow limit prefix since tail timestamps)
                   (dolist (arg (kubed-transient-args
-                                ',(intern (format "kubed-transient-logs-for-%S" resource))))
+                                ',logs-trs))
                     (cond
                      ((string-match "--namespace=\\(.+\\)" arg)
                       (setq namespace (match-string 1 arg)))
@@ -1509,8 +1522,9 @@ a prefix argument \\[universal-argument], prompt for CONTEXT too."
        (defvar-keymap ,(intern (format "kubed-%S-mode-map" plrl-var))
          :doc ,(format "Keymap for `%S" mod-name)
          "+" #',crt-name
-         ,@(when logs `("l" #'kubed-list-logs
-                        "L" #',(intern (format "kubed-transient-logs-for-%S" resource))))
+         ,@(when logs
+             `("l" #'kubed-list-logs
+               "L" #',logs-trs))
          ,@(mapcan
             (pcase-lambda (`(,suffix ,key ,_desc . ,_body))
               (when key
@@ -1563,6 +1577,8 @@ a prefix argument \\[universal-argument], prompt for CONTEXT too."
          (setq kubed-list-filter-history-variable
                ',(intern (format "kubed-%S-filter-history" plrl-var))
                kubed-list-type ,(symbol-name plrl-var)
+               ,@(when trs-cols
+                   `(kubed-list-transient-extra-suffixes ',trs-cols))
                tabulated-list-padding 2
                tabulated-list-format (apply #'vector (cons kubed-name-column ,frmt-var)))
          (add-hook 'context-menu-functions #',ctxt-fun nil t)
@@ -1651,6 +1667,7 @@ Interactively, use the current context.  With a prefix argument
 ;;;###autoload (autoload 'kubed-delete-pods "kubed" nil t)
 ;;;###autoload (autoload 'kubed-list-pods "kubed" nil t)
 ;;;###autoload (autoload 'kubed-create-pod "kubed" nil t)
+;;;###autoload (autoload 'kubed-logs-for-pod "kubed" nil t)
 ;;;###autoload (autoload 'kubed-pod-prefix-map "kubed" nil t 'keymap)
 (kubed-define-resource pod
     ((phase ".status.phase" 10
@@ -1681,6 +1698,13 @@ Interactively, use the current context.  With a prefix argument
   :prefix (("A" "Attach"       kubed-attach)
            ("X" "Execute"      kubed-exec)
            ("F" "Forward Port" kubed-forward-port-to-pod))
+  :suffixes ([ ("L" "Logs" kubed-transient-logs-for-pod)
+               ("X" "Exec" kubed-pods-exec)
+               ("a" "Attach" kubed-pods-attach)]
+             [ :pad-keys t
+               ("C-d" "Dired" kubed-pods-dired)
+               ("s" "Shell" kubed-pods-shell)
+               ("F" "Forward port" kubed-pods-forward-port)])
   (dired "C-d" "Start Dired in"
          ;; Explicit namespace in Kuberenetes remote file names
          ;; introduced in Emacs 31.  See Bug#59797.
@@ -1806,6 +1830,7 @@ With a prefix argument, prompt for CONTEXT instead."
 ;;;###autoload (autoload 'kubed-delete-services "kubed" nil t)
 ;;;###autoload (autoload 'kubed-list-services "kubed" nil t)
 ;;;###autoload (autoload 'kubed-create-service "kubed" nil t)
+;;;###autoload (autoload 'kubed-logs-for-service "kubed" nil t)
 ;;;###autoload (autoload 'kubed-service-prefix-map "kubed" nil t 'keymap)
 (kubed-define-resource service
     ((type ".spec.type" 12)
@@ -1867,6 +1892,7 @@ defaulting to the current namespace."
 ;;;###autoload (autoload 'kubed-delete-jobs "kubed" nil t)
 ;;;###autoload (autoload 'kubed-list-jobs "kubed" nil t)
 ;;;###autoload (autoload 'kubed-create-job "kubed" nil t)
+;;;###autoload (autoload 'kubed-logs-for-job "kubed" nil t)
 ;;;###autoload (autoload 'kubed-job-prefix-map "kubed" nil t 'keymap)
 (kubed-define-resource job
     ((status ".status.conditions[0].type" 10) (starttime ".status.startTime" 20))
@@ -2016,6 +2042,7 @@ NAMESPACE too.  With a double prefix argument, also prompt for CONTEXT."
 ;;;###autoload (autoload 'kubed-delete-deployments "kubed" nil t)
 ;;;###autoload (autoload 'kubed-list-deployments "kubed" nil t)
 ;;;###autoload (autoload 'kubed-create-deployment "kubed" nil t)
+;;;###autoload (autoload 'kubed-logs-for-deployment "kubed" nil t)
 ;;;###autoload (autoload 'kubed-deployment-prefix-map "kubed" nil t 'keymap)
 (kubed-define-resource deployment
     (( ready ".status.readyReplicas" 6
@@ -2038,6 +2065,9 @@ NAMESPACE too.  With a double prefix argument, also prompt for CONTEXT."
   :prefix (("R" "Restart" kubed-restart-deployment)
            ("W" "Watch"   kubed-watch-deployment-status))
   :logs t
+  :suffixes ([("L" "Logs" kubed-transient-logs-for-deployment)
+              ("W" "Watch" kubed-deployments-watch)
+              ("R" "Restart" kubed-deployments-restart)])
   :create
   ((name images &optional context namespace replicas port command)
    "Deploy IMAGES to Kubernetes in deployment with name NAME.
@@ -2104,6 +2134,7 @@ optional command to run in the images."
 ;;;###autoload (autoload 'kubed-delete-replicasets "kubed" nil t)
 ;;;###autoload (autoload 'kubed-list-replicasets "kubed" nil t)
 ;;;###autoload (autoload 'kubed-create-replicaset "kubed" nil t)
+;;;###autoload (autoload 'kubed-logs-for-replicaset "kubed" nil t)
 ;;;###autoload (autoload 'kubed-replicaset-prefix-map "kubed" nil t 'keymap)
 (kubed-define-resource replicaset
     ((reps ".status.replicas" 4
@@ -2120,6 +2151,7 @@ optional command to run in the images."
 ;;;###autoload (autoload 'kubed-delete-statefulsets "kubed" nil t)
 ;;;###autoload (autoload 'kubed-list-statefulsets "kubed" nil t)
 ;;;###autoload (autoload 'kubed-create-statefulset "kubed" nil t)
+;;;###autoload (autoload 'kubed-logs-for-statefulset "kubed" nil t)
 ;;;###autoload (autoload 'kubed-statefulset-prefix-map "kubed" nil t 'keymap)
 (kubed-define-resource statefulset
     ((reps ".status.replicas" 4
@@ -2777,7 +2809,7 @@ argument, also prompt for CONTEXT."
             (when follow '("--follow"))
             (when prefix '("--prefix"))
             (when timestamps '("--timestamps"))
-            (when since (list "--since" since))
+            (when since (list "--since-time" since))
             (when tail (list "--tail" (number-to-string tail)))
             (when limit (list "--limit-bytes" (number-to-string limit)))))
     (display-buffer buf)))
