@@ -6,22 +6,22 @@
 ;; Maintainer: Eshel Yaron <~eshel/kubed-devel@lists.sr.ht>
 ;; Keywords: tools kubernetes containers
 ;; URL: https://eshelyaron.com/kubed.html
-;; Package-Version: 0.3.2
+;; Package-Version: 0.4.0
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
 
 ;; This library defines commands for interacting with Kubernetes
-;; resources, such as Kuberenetes pods, services, deployments, and more.
+;; resources, such as Kubernetes pods, services, deployments, and more.
 ;;
-;; Use `kubed-display-pod' to display a Kuberenetes pod,
+;; Use `kubed-display-pod' to display a Kubernetes pod,
 ;; `kubed-edit-pod' to edit it, `kubed-delete-pods' to delete it, and
 ;; `kubed-list-pods' to see a menu of all pods.  You can create new pods
 ;; from YAML or JSON files with `kubed-create-pod'.
 ;;
 ;; Similar commands are defined for other types of resources as well.
 ;;
-;; This library interacts with Kuberenetes via `kubectl', and uses the
+;; This library interacts with Kubernetes via `kubectl', and uses the
 ;; current `kubectl' context and namespace by default.  To change your
 ;; current context or namespace, use commands `kubed-use-context' and
 ;; `kubed-set-namespace' respectively; you can also interact with
@@ -187,7 +187,7 @@ the namespace of the resource, or nil if TYPE is not namespaced.")
 (put 'kubed-display-resource-info 'permanent-local t)
 
 (defun kubed-display-resource-revert (&optional _ _)
-  "Clear and populate current Kuberenetes resource buffer."
+  "Clear and populate current Kubernetes resource buffer."
   (seq-let (type name context namespace)
       kubed-display-resource-info
     (let ((inhibit-read-only t)
@@ -238,6 +238,9 @@ Non-nil optional argument PROMPT-P says to prompt for a namespace."
   (let ((ns (if (equal context (kubed-local-context))
                 (kubed-local-namespace)
               (kubed-current-namespace context))))
+    ;; If CONTEXT is another context that has no configured namespace,
+    ;; then NS is nil and we must prompt.
+    (unless ns (setq prompt-p t))
     (if prompt-p
         (kubed-read-namespace "Namespace" ns nil context)
       ns)))
@@ -361,7 +364,7 @@ prompt for CONTEXT as well."
 
 The first argument, SYMBOL, is ignored.  You can use this function as
 the `completion-predicate' property of commands that you define that
-should only be available in buffers that display Kuberenetes resources."
+should only be available in buffers that display Kubernetes resources."
   (buffer-local-value 'kubed-display-resource-mode buffer))
 
 (dolist (cmd '(kubed-display-resource-jump-to-list
@@ -376,7 +379,7 @@ should only be available in buffers that display Kuberenetes resources."
   "C-c C-c" #'kubed-display-resource-replace)
 
 (define-minor-mode kubed-display-resource-mode
-  "Minor mode for buffers that display a Kuberenetes resource."
+  "Minor mode for buffers that display a Kubernetes resource."
   :interactive nil
   :lighter " Kubed"
   (when kubed-display-resource-mode
@@ -1085,20 +1088,6 @@ prompt for CONTEXT as well."
     (error (format "Failed to delete Kubernetes %s `%s'"
                    type (string-join resources "', `")))))
 
-(defmacro kubed--static-if (condition then-form &rest else-forms)
-  "A conditional compilation macro.
-Evaluate CONDITION at macro-expansion time.  If it is non-nil, expand
-the macro to THEN-FORM.  Otherwise expand it to ELSE-FORMS enclosed in a
-‘progn’ form.  ELSE-FORMS may be empty.
-
-This is the same as `static-if' from Emacs 30, defined here for
-compatibility with earlier Emacs versions."
-  (declare (indent 2)
-           (debug (sexp sexp &rest sexp)))
-  (if (eval condition lexical-binding)
-      then-form
-    (when else-forms (cons 'progn else-forms))))
-
 ;;;###autoload
 (defun kubed-edit-resource (type resource context &optional namespace)
   "Edit Kubernetes RESOURCE of type TYPE in context CONTEXT.
@@ -1135,7 +1124,7 @@ prompt for CONTEXT as well."
            context namespace)))
   (unless (bound-and-true-p server-process) (server-start))
   (let ((process-environment
-         (cons (kubed--static-if (<= 30 emacs-major-version)
+         (cons (if (boundp 'emacsclient-program-name)
                    (concat "KUBE_EDITOR=" emacsclient-program-name)
                  "KUBE_EDITOR=emacsclient")
                process-environment)))
@@ -1462,7 +1451,7 @@ a prefix argument \\[universal-argument], prompt for CONTEXT too."
            `((defun ,logs-cmd
                  ( ,resource &optional context namespace
                    container follow limit prefix since tail timestamps)
-               ,(format "Show logs for Kuberenetes %S %s."
+               ,(format "Show logs for Kubernetes %S %s."
                         resource (upcase (symbol-name resource)))
                (interactive
                 (let ( ,resource context namespace
@@ -1662,6 +1651,12 @@ Interactively, use the current context.  With a prefix argument
                "\\)")
        1))
 
+(declare-function kubed-tramp-context          "kubed-tramp" (file-name))
+(declare-function kubed-tramp-namespace        "kubed-tramp" (file-name))
+(declare-function kubed-tramp-assert-support   "kubed-tramp" ())
+(declare-function kubed-tramp-remote-file-name "kubed-tramp"
+                  (context namespace pod &optional file-name))
+
 ;;;###autoload (autoload 'kubed-display-pod "kubed" nil t)
 ;;;###autoload (autoload 'kubed-edit-pod "kubed" nil t)
 ;;;###autoload (autoload 'kubed-delete-pods "kubed" nil t)
@@ -1706,38 +1701,18 @@ Interactively, use the current context.  With a prefix argument
                ("s" "Shell" kubed-pods-shell)
                ("F" "Forward port" kubed-pods-forward-port)])
   (dired "C-d" "Start Dired in"
-         ;; Explicit namespace in Kuberenetes remote file names
-         ;; introduced in Emacs 31.  See Bug#59797.
-         (kubed--static-if (<= 31 emacs-major-version)
-             (dired (concat "/kubernetes:" pod "%" kubed-list-namespace ":"))
-           ;; FIXME: Also check context.
-           (unless (string= kubed-list-namespace (kubed-current-namespace))
-             (if (y-or-n-p
-                  (format "Starting Dired in a pod in a different namespace \
-requires Emacs 31 or later.
-You can proceed by first switching your current namespace.
-Switch to namespace `%s' and proceed?" kubed-list-namespace))
-                 (kubed-set-namespace kubed-list-namespace)
-               (user-error
-                "Cannot start Dired in a pod in different namespace `%s'"
-                kubed-list-namespace)))
-           (dired (concat "/kubernetes:" pod ":"))))
+         (kubed-tramp-assert-support)
+         (dired (kubed-tramp-remote-file-name
+                 kubed-list-context kubed-list-namespace pod)))
   (shell "s" "Start shell in"
-         (kubed--static-if (<= 31 emacs-major-version)
-             (let* ((default-directory (concat "/kubernetes:" pod "%" kubed-list-namespace ":")))
-               (shell (format "*kubed-pod-%s-shell*" pod)))
-           (unless (string= kubed-list-namespace (kubed-current-namespace))
-             (if (y-or-n-p
-                  (format "Starting Shell in a pod in a different namespace \
-requires Emacs 31 or later.
-You can proceed by first switching your current namespace.
-Switch to namespace `%s' and proceed?" kubed-list-namespace))
-                 (kubed-set-namespace kubed-list-namespace)
-               (user-error
-                "Cannot start Shell in a pod in different namespace `%s'"
-                kubed-list-namespace)))
-           (let* ((default-directory (concat "/kubernetes:" pod ":")))
-             (shell (format "*kubed-pod-%s-shell*" pod)))))
+         (kubed-tramp-assert-support)
+         (let* ((default-directory (kubed-tramp-remote-file-name
+                                    kubed-list-context kubed-list-namespace pod)))
+           (shell
+            (concat "*Kubed Shell "
+                    (kubed-display-resource-short-description
+                     "pods" pod kubed-list-context kubed-list-namespace)
+                    "*"))))
   (attach "a" "Attach to remote process running on"
           (kubed-attach pod (kubed-read-container pod "Container" t
                                                   kubed-list-context
@@ -2348,13 +2323,23 @@ DEFAULT-BACKEND is the service to use as a backend for unhandled URLs."
   "Return current Kubernetes context."
   (car (process-lines kubed-kubectl-program "config" "current-context")))
 
+(defun kubed-read-default-namespace-non-empty (context)
+  "Prompt for a default namespace for CONTEXT, refusing empty input."
+  (let ((ns (kubed-read-namespace
+             (format "Default namespace for context `%s'" context)
+             nil nil context)))
+    (when (string-empty-p ns)
+      (user-error "You didn't specify a default namespace"))
+    ns))
+
 (defun kubed-default-context-and-namespace ()
   "Return default context and namespace as a cons cell (CONTEXT . NAMESPACE)."
   (or kubed-default-context-and-namespace
       (setq kubed-default-context-and-namespace
             (let ((context (kubed-current-context)))
               (cons context
-                    (kubed-current-namespace context))))))
+                    (or (kubed-current-namespace context)
+                        (kubed-read-default-namespace-non-empty context)))))))
 
 (defun kubed-default-context ()
   "Return default `kubectl' context."
@@ -2364,10 +2349,18 @@ DEFAULT-BACKEND is the service to use as a backend for unhandled URLs."
   "Return default Kubernetes namespace in the default context."
   (cdr (kubed-default-context-and-namespace)))
 
+(defun kubed-remote-file-name-p (file-name)
+  "Check whether FILE-NAME is a Kubed Tramp remote file name."
+  ;; We use this function to heuristically check file names without
+  ;; loading `kubed-tramp' (which in turn loads `tramp').
+  (string-match-p "[/|]kubedv[0-9]+:" file-name))
+
 (defun kubed-local-context ()
   "Return Kubernetes context local to the current buffer."
   (or kubed-list-context
       (nth 2 kubed-display-resource-info)
+      (and (kubed-remote-file-name-p default-directory)
+           (kubed-tramp-context default-directory))
       (kubed-default-context)))
 
 (defvar kubed-context-history nil
@@ -2434,23 +2427,21 @@ Optional argument DEFAULT is the minibuffer default argument."
     (display-buffer buf)))
 
 (defun kubed-current-namespace (&optional context)
-  "Return current Kubernetes namespace for context CONTEXT."
-  ;; FIXME: If no namespace is configured as the default for CONTEXT,
-  ;; suggest setting one.
-  (car (process-lines
-        kubed-kubectl-program
-        "config" "view" "-o"
-        (format "jsonpath={.contexts[?(.name==\"%s\")].context.namespace}"
-                (or context (kubed-current-context))))))
+  "Return current Kubernetes namespace for context CONTEXT.
+
+If no namespace is configured for CONTEXT, return nil."
+  (or (car (process-lines
+            kubed-kubectl-program
+            "config" "view" "-o"
+            (format "jsonpath={.contexts[?(.name==\"%s\")].context.namespace}"
+                    (or context (kubed-current-context)))))))
 
 (defun kubed-local-namespace ()
   "Return Kubernetes namespace in CONTEXT local to the current buffer."
   (or kubed-list-namespace
       (nth 3 kubed-display-resource-info)
-      (kubed--static-if (<= 31 emacs-major-version)
-          (and (string-match "[/|]kubernetes:.*%\\([a-z0-9-]+\\):"
-                             default-directory)
-               (match-string 1 default-directory)))
+      (and (kubed-remote-file-name-p default-directory)
+           (kubed-tramp-namespace default-directory))
       (kubed-default-namespace)))
 
 (defun kubed-local-context-and-namespace ()
@@ -2463,13 +2454,10 @@ Optional argument DEFAULT is the minibuffer default argument."
         (cons context
               (or (nth 3 kubed-display-resource-info)
                   (kubed-current-namespace context))))
-      (let ((context (kubed-default-context)))
-        (cons context
-              (or (kubed--static-if (<= 31 emacs-major-version)
-                      (and (string-match "[/|]kubernetes:.*%\\([a-z0-9-]+\\):"
-                                         default-directory)
-                           (match-string 1 default-directory)))
-                  (kubed-default-namespace))))))
+      (when-let ((context (and (kubed-remote-file-name-p default-directory)
+                               (kubed-tramp-context default-directory))))
+        (cons context (kubed-tramp-namespace default-directory)))
+      (kubed-default-context-and-namespace)))
 
 ;;;###autoload
 (defun kubed-set-namespace (namespace &optional context)
@@ -3146,22 +3134,21 @@ resource types."
            (when only-namespaced '("--namespaced=true"))
            (when context (list (concat "--context=" context)))))))
 
-(defun kubed-resource-names (type &optional context namespace)
-  "Return list of Kuberenetes resources of type TYPE in NAMESPACE via CONTEXT."
-  (let* ((context (or context (kubed-local-context)))
-         (namespace (or namespace (kubed--namespace context))))
-    (unless (kubed--alist type context namespace)
-      (let ((proc (kubed-update type context namespace)))
-        (while (process-live-p proc)
-          (accept-process-output proc 1))))
-    (mapcar #'car (alist-get 'resources (kubed--alist type context namespace)))))
+(defun kubed-resource-names (type context &optional namespace)
+  "Return list of Kubernetes resources of type TYPE in NAMESPACE via CONTEXT."
+  (unless (kubed--alist type context namespace)
+    (let ((proc (kubed-update type context namespace)))
+      (while (process-live-p proc)
+        (accept-process-output proc 1))))
+  (mapcar #'car (alist-get 'resources (kubed--alist type context namespace))))
 
 (defun kubed-read-resource-name (type prompt &optional default multi context namespace)
   "Prompt with PROMPT for Kubernetes resource name of type TYPE.
 
-Optional argument DEFAULT is the minibuffer default argument.  Non-nil
-optional argument NAMESPACE says to use names from NAMESPACE as
-completion candidates instead of the current namespace."
+Optional argument DEFAULT is the minibuffer default argument; non-nil
+MULTI says to read multiple names and return them as a list; CONTEXT is
+the `kubectl' context to use, defaulting to the local context; and
+NAMESPACE is the namespace to use, or nil if TYPE is non-namespaced."
   (funcall
    (if multi #'completing-read-multiple #'completing-read)
    (format-prompt prompt default)
@@ -3170,7 +3157,8 @@ completion candidates instead of the current namespace."
        (if (eq a 'metadata)
            `(metadata (category . ,(intern (concat "kubernetes-" type))))
          (when (eq table 'unset)
-           (setq table (kubed-resource-names type context namespace)))
+           (setq table (kubed-resource-names
+                        type (or context (kubed-local-context)) namespace)))
          (complete-with-action a table s p))))
    nil 'confirm nil (intern (concat "kubed-" type "-history")) default))
 
