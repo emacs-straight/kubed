@@ -1,2 +1,2 @@
 ;; Generated package description from kubed.el  -*- no-byte-compile: t -*-
-(define-package "kubed" "0.4.0.0.20240918.145853" "Kubernetes, Emacs, done!" '((emacs "29.1")) :commit "dd91adf1cdcab664b9e1d2afa49ba1b2bdd5ff55" :authors '(("Eshel Yaron" . "me@eshelyaron.com")) :maintainer '("Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht") :keywords '("tools" "kubernetes" "containers") :url "https://eshelyaron.com/kubed.html")
+(define-package "kubed" "0.4.0.0.20240920.163842" "Kubernetes, Emacs, done!" '((emacs "29.1")) :commit "5f23c410dfbfef5d041f56a1c25a51eb9691fb4d" :authors '(("Eshel Yaron" . "me@eshelyaron.com")) :maintainer '("Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht") :keywords '("tools" "kubernetes" "containers") :url "https://eshelyaron.com/kubed.html")

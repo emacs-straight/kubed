@@ -1,4 +1,4 @@
-This is docPZOMbm.info, produced by makeinfo version 6.8 from
+This is docWt7RUh.info, produced by makeinfo version 6.8 from
 kubed.texi.
 
 This manual is for Kubed 0.4.1, a rich Emacs interface for Kubernetes.
@@ -16,7 +16,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docPZOMbm.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docWt7RUh.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 Kubed: Kubernetes, Emacs, done!
 *******************************
@@ -33,7 +33,7 @@ This manual is for Kubed 0.4.1, a rich Emacs interface for Kubernetes.
 * Indices::
 
 
-File: docPZOMbm.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
+File: docWt7RUh.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -56,7 +56,7 @@ along with many options that Kubed provides for you to customize its
 behavior.
 
 
-File: docPZOMbm.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
+File: docWt7RUh.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
 
 2 Getting Started
 *****************
@@ -83,7 +83,7 @@ installations.  If Emacs doesn’t find the ‘kubectl’ executable via
      Name of ‘kubectl’ executable file to use.
 
 
-File: docPZOMbm.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
+File: docWt7RUh.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
 
 3 Usage
 *******
@@ -140,7 +140,7 @@ interactive guidance for invoking Kubed commands.  *Note
 * Scale Deployment::
 
 
-File: docPZOMbm.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
+File: docWt7RUh.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
 
 3.1 Display Resource
 ====================
@@ -232,7 +232,7 @@ This minor mode does the following:
      and want to restart from a clean slate.
 
 
-File: docPZOMbm.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
+File: docWt7RUh.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
 
 3.2 Browse Resources
 ====================
@@ -346,7 +346,7 @@ updated data from Kubernetes.  You can still invoke ‘revert-buffer’ with
 * List Filter::
 
 
-File: docPZOMbm.info,  Node: List Filter,  Up: Browse Resources
+File: docWt7RUh.info,  Node: List Filter,  Up: Browse Resources
 
 3.2.1 Filtering Resource Lists
 ------------------------------
@@ -409,7 +409,7 @@ available for column names and values.  To clear the filter, just exit
 the minibuffer with an empty input.
 
 
-File: docPZOMbm.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
+File: docWt7RUh.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
 
 3.3 Context and Namespace
 =========================
@@ -459,7 +459,7 @@ buffer in which you call them:
      cons cell ‘(CONTEXT . NAMESPACE)’.
 
 
-File: docPZOMbm.info,  Node: Transient Menus,  Next: Scale Deployment,  Prev: Context and Namespace,  Up: Usage
+File: docWt7RUh.info,  Node: Transient Menus,  Next: Scale Deployment,  Prev: Context and Namespace,  Up: Usage
 
 3.4 Transient Menus
 ===================
@@ -491,7 +491,7 @@ with commands that are specific to the type of resources the buffer
 displays.  *Note Browse Resources::.
 
 
-File: docPZOMbm.info,  Node: Scale Deployment,  Prev: Transient Menus,  Up: Usage
+File: docWt7RUh.info,  Node: Scale Deployment,  Prev: Transient Menus,  Up: Usage
 
 3.5 Scale Deployment
 ====================
@@ -521,7 +521,7 @@ by simply typing ‘$’.  *Note Browse Resources::.
 Kubed transient by pressing ‘$’.  *Note Transient Menus::.
 
 
-File: docPZOMbm.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
+File: docWt7RUh.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
 
 4 Extending Kubed
 *****************
@@ -560,7 +560,7 @@ list buffer and the ‘commands’ argument which lets you associate
 additional commands with your resource type.
 
 
-File: docPZOMbm.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
+File: docWt7RUh.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
 
 5 Contributing
 **************
@@ -580,7 +580,7 @@ new buffer with a message template ready to be sent to the development
 mailing list.
 
 
-File: docPZOMbm.info,  Node: Indices,  Prev: Contributing,  Up: Top
+File: docWt7RUh.info,  Node: Indices,  Prev: Contributing,  Up: Top
 
 Indices
 *******
@@ -593,7 +593,7 @@ Indices
 * Concept Index::
 
 
-File: docPZOMbm.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
+File: docWt7RUh.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
 
 Function index
 ==============
@@ -648,7 +648,7 @@ Function index
 * tabulated-list-widen-current-column:   Browse Resources.     (line 96)
 
 
-File: docPZOMbm.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
+File: docWt7RUh.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 Variable index
 ==============
@@ -664,7 +664,7 @@ Variable index
 * kubed-yaml-setup-hook:                 Display Resource.     (line 53)
 
 
-File: docPZOMbm.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
+File: docWt7RUh.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
 
 Keystroke index
 ===============
@@ -700,7 +700,7 @@ Keystroke index
 * x:                                     Browse Resources.     (line 67)
 
 
-File: docPZOMbm.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
+File: docWt7RUh.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
 
 Concept index
 =============
