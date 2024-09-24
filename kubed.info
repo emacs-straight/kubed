@@ -1,4 +1,4 @@
-This is docWt7RUh.info, produced by makeinfo version 6.8 from
+This is docSOdaOt.info, produced by makeinfo version 6.8 from
 kubed.texi.
 
 This manual is for Kubed 0.4.1, a rich Emacs interface for Kubernetes.
@@ -16,7 +16,7 @@ START-INFO-DIR-ENTRY
 END-INFO-DIR-ENTRY
 
 
-File: docWt7RUh.info,  Node: Top,  Next: Overview,  Up: (dir)
+File: docSOdaOt.info,  Node: Top,  Next: Overview,  Up: (dir)
 
 Kubed: Kubernetes, Emacs, done!
 *******************************
@@ -33,7 +33,7 @@ This manual is for Kubed 0.4.1, a rich Emacs interface for Kubernetes.
 * Indices::
 
 
-File: docWt7RUh.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
+File: docSOdaOt.info,  Node: Overview,  Next: Getting Started,  Prev: Top,  Up: Top
 
 1 Overview
 **********
@@ -48,6 +48,7 @@ interactive interface.
    • Browse and manage Kubernetes workloads
    • Connect to pods and edit files or execute commands
    • Create new resources, edit and delete them
+   • Work with multiple clusters
    • Get help about various Kubernetes objects
    • ...
 
@@ -56,7 +57,7 @@ along with many options that Kubed provides for you to customize its
 behavior.
 
 
-File: docWt7RUh.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
+File: docSOdaOt.info,  Node: Getting Started,  Next: Usage,  Prev: Overview,  Up: Top
 
 2 Getting Started
 *****************
@@ -83,7 +84,7 @@ installations.  If Emacs doesn’t find the ‘kubectl’ executable via
      Name of ‘kubectl’ executable file to use.
 
 
-File: docWt7RUh.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
+File: docSOdaOt.info,  Node: Usage,  Next: Extending Kubed,  Prev: Getting Started,  Up: Top
 
 3 Usage
 *******
@@ -140,7 +141,7 @@ interactive guidance for invoking Kubed commands.  *Note
 * Scale Deployment::
 
 
-File: docWt7RUh.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
+File: docSOdaOt.info,  Node: Display Resource,  Next: Browse Resources,  Up: Usage
 
 3.1 Display Resource
 ====================
@@ -232,7 +233,7 @@ This minor mode does the following:
      and want to restart from a clean slate.
 
 
-File: docWt7RUh.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
+File: docSOdaOt.info,  Node: Browse Resources,  Next: Context and Namespace,  Prev: Display Resource,  Up: Usage
 
 3.2 Browse Resources
 ====================
@@ -346,7 +347,7 @@ updated data from Kubernetes.  You can still invoke ‘revert-buffer’ with
 * List Filter::
 
 
-File: docWt7RUh.info,  Node: List Filter,  Up: Browse Resources
+File: docSOdaOt.info,  Node: List Filter,  Up: Browse Resources
 
 3.2.1 Filtering Resource Lists
 ------------------------------
@@ -409,7 +410,7 @@ available for column names and values.  To clear the filter, just exit
 the minibuffer with an empty input.
 
 
-File: docWt7RUh.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
+File: docSOdaOt.info,  Node: Context and Namespace,  Next: Transient Menus,  Prev: Browse Resources,  Up: Usage
 
 3.3 Context and Namespace
 =========================
@@ -459,7 +460,7 @@ buffer in which you call them:
      cons cell ‘(CONTEXT . NAMESPACE)’.
 
 
-File: docWt7RUh.info,  Node: Transient Menus,  Next: Scale Deployment,  Prev: Context and Namespace,  Up: Usage
+File: docSOdaOt.info,  Node: Transient Menus,  Next: Scale Deployment,  Prev: Context and Namespace,  Up: Usage
 
 3.4 Transient Menus
 ===================
@@ -491,7 +492,7 @@ with commands that are specific to the type of resources the buffer
 displays.  *Note Browse Resources::.
 
 
-File: docWt7RUh.info,  Node: Scale Deployment,  Prev: Transient Menus,  Up: Usage
+File: docSOdaOt.info,  Node: Scale Deployment,  Prev: Transient Menus,  Up: Usage
 
 3.5 Scale Deployment
 ====================
@@ -521,7 +522,7 @@ by simply typing ‘$’.  *Note Browse Resources::.
 Kubed transient by pressing ‘$’.  *Note Transient Menus::.
 
 
-File: docWt7RUh.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
+File: docSOdaOt.info,  Node: Extending Kubed,  Next: Contributing,  Prev: Usage,  Up: Top
 
 4 Extending Kubed
 *****************
@@ -560,7 +561,7 @@ list buffer and the ‘commands’ argument which lets you associate
 additional commands with your resource type.
 
 
-File: docWt7RUh.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
+File: docSOdaOt.info,  Node: Contributing,  Next: Indices,  Prev: Extending Kubed,  Up: Top
 
 5 Contributing
 **************
@@ -580,7 +581,7 @@ new buffer with a message template ready to be sent to the development
 mailing list.
 
 
-File: docWt7RUh.info,  Node: Indices,  Prev: Contributing,  Up: Top
+File: docSOdaOt.info,  Node: Indices,  Prev: Contributing,  Up: Top
 
 Indices
 *******
@@ -593,7 +594,7 @@ Indices
 * Concept Index::
 
 
-File: docWt7RUh.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
+File: docSOdaOt.info,  Node: Function Index,  Next: Variable Index,  Up: Indices
 
 Function index
 ==============
@@ -648,7 +649,7 @@ Function index
 * tabulated-list-widen-current-column:   Browse Resources.     (line 96)
 
 
-File: docWt7RUh.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
+File: docSOdaOt.info,  Node: Variable Index,  Next: Keystroke Index,  Prev: Function Index,  Up: Indices
 
 Variable index
 ==============
@@ -664,7 +665,7 @@ Variable index
 * kubed-yaml-setup-hook:                 Display Resource.     (line 53)
 
 
-File: docWt7RUh.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
+File: docSOdaOt.info,  Node: Keystroke Index,  Next: Concept Index,  Prev: Variable Index,  Up: Indices
 
 Keystroke index
 ===============
@@ -700,7 +701,7 @@ Keystroke index
 * x:                                     Browse Resources.     (line 67)
 
 
-File: docWt7RUh.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
+File: docSOdaOt.info,  Node: Concept Index,  Prev: Keystroke Index,  Up: Indices
 
 Concept index
 =============
@@ -721,23 +722,23 @@ Concept index
 Tag Table:
 Node: Top596
 Node: Overview1140
-Node: Getting Started1873
-Node: Usage2970
-Ref: Definition of kubed-prefix-map3581
-Ref: Definition of kubed-menu-bar-mode4344
-Node: Display Resource4979
-Node: Browse Resources9509
-Node: List Filter14294
-Node: Context and Namespace16947
-Node: Transient Menus19337
-Node: Scale Deployment20912
-Node: Extending Kubed22209
-Node: Contributing23800
-Node: Indices24500
-Node: Function Index24674
-Node: Variable Index28069
-Node: Keystroke Index28659
-Node: Concept Index30719
+Node: Getting Started1908
+Node: Usage3005
+Ref: Definition of kubed-prefix-map3616
+Ref: Definition of kubed-menu-bar-mode4379
+Node: Display Resource5014
+Node: Browse Resources9544
+Node: List Filter14329
+Node: Context and Namespace16982
+Node: Transient Menus19372
+Node: Scale Deployment20947
+Node: Extending Kubed22244
+Node: Contributing23835
+Node: Indices24535
+Node: Function Index24709
+Node: Variable Index28104
+Node: Keystroke Index28694
+Node: Concept Index30754
 
 End Tag Table
 
