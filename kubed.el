@@ -1008,36 +1008,41 @@ number at point, or the numeric prefix argument if you provide one."
      (cons 'current (tabulated-list-get-id))
      (cons 'namespace kubed-list-namespace)))))
 
+(defun kubed-list-revert (&rest _)
+  "Revert the current Kubernetes resources list buffer.
+
+This is the `revert-buffer-function' for `kubed-list-mode' and its
+derivatives.  This function does not fetch new data from Kubernetes, it
+only (re)displays the existing data."
+  (let (marks)
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (unless (eq (char-after) ?\s)
+          (push (cons (tabulated-list-get-id)
+                      ;; Preserve mark text properties.
+                      (buffer-substring (point) (1+ (point))))
+                marks))
+        (forward-line)))
+    (tabulated-list-revert)
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((id (tabulated-list-get-id)))
+          (when-let ((mark (alist-get id marks nil nil #'equal)))
+            (tabulated-list-put-tag mark)))
+        (forward-line)))))
+
 (define-derived-mode kubed-list-mode tabulated-list-mode "Kubernetes Resources"
   "Major mode for listing Kubernetes resources.
 
 Modes for specific resource types, such as `kubed-pods-mode', use this
 mode as their parent."
   :interactive nil
-  (add-hook 'revert-buffer-restore-functions
-            (lambda ()
-              (let (marks)
-                (save-excursion
-                  (goto-char (point-min))
-                  (while (not (eobp))
-                    (unless (eq (char-after) ?\s)
-                      (push (cons (tabulated-list-get-id)
-                                  ;; Preserve mark text properties.
-                                  (buffer-substring (point) (1+ (point))))
-                            marks))
-                    (forward-line)))
-                (lambda ()
-                  (save-excursion
-                    (goto-char (point-min))
-                    (while (not (eobp))
-                      (let ((id (tabulated-list-get-id)))
-                        (when-let ((mark (alist-get id marks nil nil #'equal)))
-                          (tabulated-list-put-tag mark)))
-                      (forward-line))))))
-            nil t)
-  (setq-local truncate-string-ellipsis (propertize ">" 'face 'shadow))
-  (setq-local tabulated-list-entries #'kubed-list-entries)
-  (setq-local bookmark-make-record-function #'kubed-list-make-bookmark)
+  (setq-local truncate-string-ellipsis (propertize ">" 'face 'shadow)
+              tabulated-list-entries #'kubed-list-entries
+              bookmark-make-record-function #'kubed-list-make-bookmark
+              revert-buffer-function #'kubed-list-revert)
   (add-hook 'context-menu-functions #'kubed-list-context-menu nil t))
 
 ;;;###autoload
@@ -1134,6 +1139,22 @@ prompt for CONTEXT as well."
            (append
             (when namespace (list "-n" namespace))
             (when context (list "--context" context))))))
+
+(defcustom kubed-list-mode-line-format
+  '(:eval (cond
+           ((process-live-p
+             (alist-get 'process
+                        (kubed--alist kubed-list-type
+                                      kubed-list-context
+                                      kubed-list-namespace)))
+            (propertize "[...]" 'help-echo "Updating..."))
+           (kubed-list-filter
+            (propertize
+             (concat "[" (mapconcat #'prin1-to-string kubed-list-filter " ") "]")
+             'help-echo "Current filter"))))
+  "Mode line construct for indicating status of Kubernetes resources list."
+  :type 'sexp
+  :risky t)
 
 ;;;###autoload
 (defmacro kubed-define-resource (resource &optional properties &rest commands)
@@ -1550,17 +1571,8 @@ a prefix argument \\[universal-argument], prompt for CONTEXT too."
          menu)
 
        (define-derived-mode ,mod-name kubed-list-mode
-         (list ,(format "Kubernetes %ss" (capitalize (symbol-name resource)))
-               (list '(:eval (if (process-live-p
-                                  (alist-get 'process
-                                             (kubed--alist kubed-list-type
-                                                           kubed-list-context
-                                                           kubed-list-namespace)))
-                                 (propertize "[...]" 'help-echo "Updating...")
-                               (when kubed-list-filter
-                                 (propertize
-                                  (concat "[" (mapconcat #'prin1-to-string kubed-list-filter " ") "]")
-                                  'help-echo "Current filter"))))))
+         '(,(format "Kubernetes %s" (capitalize (symbol-name plrl-var)))
+           kubed-list-mode-line-format)
          ,(format "Major mode for listing Kubernetes %S." plrl-var)
          :interactive nil
          (setq kubed-list-filter-history-variable
