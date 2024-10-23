@@ -6,7 +6,7 @@
 ;; Maintainer: Eshel Yaron <~eshel/kubed-devel@lists.sr.ht>
 ;; Keywords: tools kubernetes containers
 ;; URL: https://eshelyaron.com/kubed.html
-;; Package-Version: 0.4.1
+;; Package-Version: 0.4.2
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -48,13 +48,11 @@
 
 ;;; Code:
 
+(require 'kubed-common)
+
 (defgroup kubed nil
   "Kubernetes interface."
   :group 'tools)
-
-(defcustom kubed-kubectl-program "kubectl"
-  "Name of `kubectl' executable to use for interacting with Kubernetes."
-  :type 'string)
 
 (defcustom kubed-default-context-and-namespace nil
   "Default `kubectl' context and Kubernetes namespace.
@@ -1663,11 +1661,16 @@ Interactively, use the current context.  With a prefix argument
                "\\)")
        1))
 
+(defun kubed-remote-file-name (context namespace pod &optional file-name)
+  "Return remote FILE-NAME for POD in NAMESPACE and CONTEXT."
+  (concat "/" kubed-tramp-method ":"
+          context "%" namespace "%" pod
+          "%" (kubed-read-container pod "Container" t context namespace)
+          ":" file-name))
+
 (declare-function kubed-tramp-context          "kubed-tramp" (file-name))
 (declare-function kubed-tramp-namespace        "kubed-tramp" (file-name))
 (declare-function kubed-tramp-assert-support   "kubed-tramp" ())
-(declare-function kubed-tramp-remote-file-name "kubed-tramp"
-                  (context namespace pod &optional file-name))
 
 ;;;###autoload (autoload 'kubed-display-pod "kubed" nil t)
 ;;;###autoload (autoload 'kubed-edit-pod "kubed" nil t)
@@ -1714,11 +1717,11 @@ Interactively, use the current context.  With a prefix argument
                ("F" "Forward port" kubed-pods-forward-port)])
   (dired "C-d" "Start Dired in"
          (kubed-tramp-assert-support)
-         (dired (kubed-tramp-remote-file-name
+         (dired (kubed-remote-file-name
                  kubed-list-context kubed-list-namespace pod)))
   (shell "s" "Start shell in"
          (kubed-tramp-assert-support)
-         (let* ((default-directory (kubed-tramp-remote-file-name
+         (let* ((default-directory (kubed-remote-file-name
                                     kubed-list-context kubed-list-namespace pod)))
            (shell
             (concat "*Kubed Shell "
@@ -3485,7 +3488,7 @@ Interactively, prompt for COMMAND with completion for `kubectl' arguments."
 (defvar reporter-prompt-for-summary-p)
 
 (defun kubed-submit-bug-report ()
-  "Report a Kubed to the maintainers via mail."
+  "Report a Kubed issue to the maintainers via email."
   (interactive)
   (require 'reporter)
   (let ((reporter-prompt-for-summary-p t))
