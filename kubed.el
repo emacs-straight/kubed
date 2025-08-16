@@ -2508,7 +2508,12 @@ Optional argument DEFAULT is the minibuffer default argument."
 
 ;;;###autoload
 (defun kubed-use-context (context)
-  "Set current Kubernetes context to CONTEXT."
+  "Set default `kubectl' context to CONTEXT.
+
+This command sets the global `kubectl' default context, and updates the
+value of user option `kubed-default-context-and-namespace' accordingly.
+
+Interactively, prompt for CONTEXT with completion."
   (interactive
    (list (kubed-read-context "Use context" (kubed-local-context))))
   (unless (zerop
@@ -2516,7 +2521,12 @@ Optional argument DEFAULT is the minibuffer default argument."
             kubed-kubectl-program nil nil nil
             "config" "use-context" context))
     (user-error "Failed to use Kubernetes context `%s'" context))
-  (message "Now using Kubernetes context `%s'." context))
+  (let ((namespace (or (kubed-current-namespace context)
+                       (kubed-read-namespace
+                        (format "Default namespace to use in context `%s'" context)
+                        nil nil context))))
+    (setq kubed-default-context-and-namespace (cons context namespace))
+    (message "Default context is now `%s', namespace `%s'." context namespace)))
 
 ;;;###autoload
 (defun kubed-rename-context (old new)
@@ -2594,6 +2604,10 @@ If no namespace is configured for CONTEXT, return nil."
 ;;;###autoload
 (defun kubed-set-namespace (namespace &optional context)
   "Set default Kubernetes namespace in CONTEXT to NAMESPACE.
+
+If CONTEXT is the current default context, also update the value of user
+option `kubed-default-context-and-namespace' to use NAMESPACE as the
+default namespace.
 
 Interactively, prompt for NAMESPACE and use the current context.  With a
 prefix argument, prompt for CONTEXT as well."
