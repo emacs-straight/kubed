@@ -3486,7 +3486,7 @@ CONTEXT is the `kubectl' context to use."
 (defun kubed-read-kubectl-command (prompt &optional initial)
   "Prompt with PROMPT for a `kubectl' command line.
 
-Optional argument INITIAL added to the initial minibuffer input
+Optional argument is INITIAL added to the initial minibuffer input
 following the value of `kubed-kubectl-program' and a space character."
   (let ((init (if (consp initial)
                   (cons    (concat kubed-kubectl-program " " (car initial))
@@ -3509,8 +3509,11 @@ Interactively, prompt for COMMAND with completion for `kubectl' arguments."
                               (transient-prefix-object)))
                  (scope (and prefix (fboundp 'eieio-oref)
                              (eieio-oref prefix 'scope))))
-            (when (or args scope)
-              (concat (string-join (append scope args) " ") " "))))))
+            (or
+             (seq-find (apply-partially #'string-prefix-p "--context=") args)
+             ;; No context argument, add one.
+             (push (concat "--context=" (kubed-local-context)) args))
+            (concat (string-join (append scope args) " ") " ")))))
   (shell-command command))
 
 ;;;###autoload (autoload 'kubed-prefix-map "kubed" nil t 'keymap)
