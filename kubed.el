@@ -1,12 +1,12 @@
 ;;; kubed.el --- Kubernetes, Emacs, done!   -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2024-2025  Free Software Foundation, Inc.
+;; Copyright (C) 2024-2026  Free Software Foundation, Inc.
 
 ;; Author: Eshel Yaron <me@eshelyaron.com>
 ;; Maintainer: Eshel Yaron <~eshel/kubed-devel@lists.sr.ht>
 ;; Keywords: tools kubernetes containers
 ;; URL: https://eshelyaron.com/kubed.html
-;; Package-Version: 0.5.0
+;; Package-Version: 0.5.1
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:

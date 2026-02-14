@@ -1,2 +1,2 @@
-;; Generated package description from kubed.el  -*- mode: lisp-data; no-byte-compile: t -*-
-(define-package "kubed" "0.5.0.0.20251212.124255" "Kubernetes, Emacs, done!" '((emacs "29.1")) :commit "2e7650f3c1f986b5f81d001e5a198609f0a5b5ee" :authors '(("Eshel Yaron" . "me@eshelyaron.com")) :maintainer '("Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht") :keywords '("tools" "kubernetes" "containers") :url "https://eshelyaron.com/kubed.html")
+;; Generated package description from kubed.el  -*- mode: lisp-data; no-byte-compile: t; lexical-binding:t -*-
+(define-package "kubed" "0.5.1.0.20260213.144943" "Kubernetes, Emacs, done!" '((emacs "29.1")) :commit "9d5007cd5a6121101f7461c33036f54d37c70495" :authors '(("Eshel Yaron" . "me@eshelyaron.com")) :maintainer '("Eshel Yaron" . "~eshel/kubed-devel@lists.sr.ht") :keywords '("tools" "kubernetes" "containers") :url "https://eshelyaron.com/kubed.html")
