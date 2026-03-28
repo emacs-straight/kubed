@@ -57,6 +57,35 @@ New user option `kubed-default-context-and-namespace-alist'
   defaults depending on the host on which Kubed is running `kubectl'.
 
 
+Command `kubed-transient' is now bound to `k' in `kubed-prefix-map'
+───────────────────────────────────────────────────────────────────
+
+  This was already a recommended binding for this command, which opens
+  the “root” Kubed transient menu.
+
+
+New user option `kubed-logs-follow'
+───────────────────────────────────
+
+  The new user option `kubed-logs-follow' controls whether Kubed follows
+  new log entries by default when showing Kubernetes logs.  It defaults
+  to `t'.
+
+
+New user option `kubed-logs-tail-lines'
+───────────────────────────────────────
+
+  Kubed commands that show logs for Kubernetes resources now fetch only
+  the most recent 128 log lines by default, to avoid flooding the logs
+  buffer with the full history of long-running workloads.  You can
+  customize this limit with the new user option `kubed-logs-tail-lines';
+  set it to 0 to fetch all available log lines.
+
+
+Command `kubed-logs' is now bound to `L' in `kubed-prefix-map'
+──────────────────────────────────────────────────────────────
+
+
 Version 0.5.1 on 2026-02-13
 ═══════════════════════════
 
@@ -115,30 +144,4 @@ New user option ’kubed-list-mode-line-format’
 ─────────────────────────────────────────────
 
   This user option lets you customize the indicator that Kubed shows in
-  the mode line of resource table buffers when update is in progress.
-
-
-Fix Tramp method autoload issue
-───────────────────────────────
-
-  This version arranges for the Kubed Tramp integration to be loaded
-  earlier, which circumvents the “Method ‘kubedv1’ is not known” error
-  that some users have experienced.
-
-
-Version 0.4.1 on 2024-09-23
-═══════════════════════════
-
-New command and transient menu for scaling deployments
-──────────────────────────────────────────────────────
-
-  You can now scale Kubernetes deployment with Kubed, directly with
-  `kubed-scale-deployment', from the deployments table buffer, or via
-  the new transient menu `kubed-transient-scale-deployment'.
-
-
-New commands and transient menu for managing Kubernetes API proxies
-───────────────────────────────────────────────────────────────────
-
-  You can now use Kubed to create proxy servers that give access to the
-  Kubernetes API server.  The commands `kubed-proxy' and …  …
+  …  …
