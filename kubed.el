@@ -6,7 +6,7 @@
 ;; Maintainer: Eshel Yaron <~eshel/kubed-devel@lists.sr.ht>
 ;; Keywords: tools kubernetes containers
 ;; URL: https://eshelyaron.com/kubed.html
-;; Package-Version: 0.7.0
+;; Package-Version: 0.7.1
 ;; Package-Requires: ((emacs "29.1"))
 
 ;;; Commentary:
@@ -49,6 +49,7 @@
 ;;; Code:
 
 (require 'kubed-common)
+(require 'subr-x) ; For `replace-region-contents' before Emacs 31.
 
 (defgroup kubed nil
   "Kubernetes interface."
@@ -344,6 +345,18 @@ the namespace of the resource, or nil if TYPE is not namespaced.")
 
 (put 'kubed-display-resource-info 'permanent-local t)
 
+(defun kubed--replace-buffer-contents (source)
+  "Replace contents of the current buffer with those of SOURCE buffer."
+  (replace-region-contents
+   (point-min) (point-max)
+   ;; We could skip this version check and always provide a function,
+   ;; but the docstring of `replace-region-contents' in Emacs 31 says
+   ;; that doing so is deprecated.  So this check makes us a bit more
+   ;; future proof.
+   (if (version< emacs-version "31.1")
+       (lambda () source)
+     source)))
+
 (defun kubed-display-resource-revert (&optional _ _)
   "Clear and populate current Kubernetes resource buffer."
   (seq-let (type name context namespace)
@@ -361,7 +374,7 @@ the namespace of the resource, or nil if TYPE is not namespaced.")
                       (append (when namespace (list "-n" namespace))
                               (when context (list "--context" context)))))
               (error "Failed to display Kubernetes resource `%s'" name))
-            (replace-region-contents (point-min) (point-max) source)
+            (kubed--replace-buffer-contents source)
             (set-buffer-modified-p nil)
             (buffer-enable-undo))
         (kill-buffer source)))))
@@ -2812,7 +2825,7 @@ Interactively, prompt for CONTEXT with completion."
                                   (kubed-kubectl-program) nil source nil
                                   "config" "view"))
                           (error "`kubectl config view' failed"))
-                        (replace-region-contents (point-min) (point-max) source)
+                        (kubed--replace-buffer-contents source)
                         (set-buffer-modified-p nil)
                         (buffer-enable-undo))
                     (kill-buffer source))))))
